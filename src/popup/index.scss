@@ -1,0 +1,97 @@
+
+// GENERAL
+
+body {
+  color: #1f1f1f;
+  margin: 3px;
+}
+
+.spacer {
+  flex: 1 1 0;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 2px;
+  cursor: pointer;
+  svg {
+    opacity: .5;
+    width: 20px;
+    height: 20px;
+  }
+  &:hover {
+    background-color: rgba( 0, 0, 0, .1 );
+    svg {
+      opacity: .75;
+    }
+  }
+  &:active {
+    background-color: rgba( 0, 0, 0, .15 );
+    svg {
+      opacity: 1;
+    }
+  }
+}
+
+// POPUP
+
+#popup {
+  display: flex;
+  flex-direction: column;
+}
+
+// SESSION
+
+.session {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  min-width: 189px;
+  min-height: 26px;
+  margin: 2px 0;
+  padding: 3px 5px;
+  border-radius: 4px;
+  &.active {
+    // background-color: rgba( 168, 195, 240, .5 );
+    background-color: rgba( 254, 205, 80, .5 );
+  }
+  &:not(.active):hover {
+    background-color: rgba( 0, 0, 0, .075 );
+  }
+  > * {
+    align-self: center;
+  }
+  .name {
+    font-size: 1.4em;
+    margin-right: 5px;
+    .tabs-number {
+      opacity: .5;
+    }
+  }
+  &.delete .name {
+    text-decoration: line-through;
+    opacity: .5;
+  }
+  &:not(:hover) .button {
+    visibility: hidden;
+  }
+  form ~ .button {
+    visibility: visible !important;
+  }
+  &:not(.active) .name {
+    cursor: pointer;
+  }
+  input {
+    height: 18px;
+    padding: 3px 5px;
+    margin-right: 5px;
+    font-size: 1.3em;
+    width: 150px;
+    border-radius: 4px;
+    border: 1px solid #BFBFBF;
+  }
+}

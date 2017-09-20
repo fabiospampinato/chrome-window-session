@@ -1,0 +1,5 @@
+
+☐ configurable configuration
+☐ make it faster
+  ☐ re-implement `isWindowClosing`
+  ☐ keep trak of opened/openable windows
