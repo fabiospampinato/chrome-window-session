@@ -5,7 +5,7 @@ Save each window as a separate session, automatically.
 ## Demo
 
 <p align="center">
-	<img src="resources/screenshots/new.png" width="750" alt="Popup">
+  <img src="resources/screenshots/new.png" width="750" alt="Popup">
 </p>
 
 ## License
