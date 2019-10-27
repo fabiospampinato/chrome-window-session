@@ -168,7 +168,7 @@ class Session extends React.Component<any, any> {
 
       return (
         <div className={`session ${activeCss} ${deletingCss}`}>
-          <div className="name" onClick={this.open.bind ( this )}>{name} <span className="tabs-number">({window.tabs.length})</span></div>
+          <div className="name" onClick={this.open.bind ( this )}>{name} <span className="tabs-number">{window.tabs.length}</span></div>
           <div className="spacer"></div>
           {deleting && undoBtn}
           {deleting && cleanupBtn}
