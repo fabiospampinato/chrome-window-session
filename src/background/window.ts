@@ -15,7 +15,9 @@ const Window = {
   async get ( id: number ) {
 
     return new Promise<any> ( resolve => {
+
       chrome.windows.get ( id, { populate: true }, resolve );
+
     });
 
   },
@@ -69,6 +71,17 @@ const Window = {
 
   },
 
+  dataify ( window: chrome.windows.Window ): chrome.windows.Window { // Get the useful data we need out of a window object
+
+    return {
+      id: window.id,
+      tabs: ( window.tabs || [] ).map ( tab => {
+        return _.pick ( tab, ['id', 'url', 'active', 'pinned', 'selected'] );
+      })
+    } as chrome.windows.Window; //UGLY //TSC
+
+  },
+
   /* API */
 
   async save ( window: chrome.windows.Window, name: string = Config.window.name, prevName?: string ) {
@@ -83,8 +96,10 @@ const Window = {
 
     name = await Window.getName ( name );
 
-    await State.window2name ( window, name );
-    await State.name2window ( name, window );
+    const data = Window.dataify ( window );
+
+    await State.window2name ( data, name );
+    await State.name2window ( name, data );
 
     Badge.updateWindow ( window );
 
@@ -160,8 +175,10 @@ const Window = {
 
       if ( name ) {
 
-        await State.name2window ( name, window );
-        await State.window2name ( window, name );
+        const data = Window.dataify ( window );
+
+        await State.name2window ( name, data );
+        await State.window2name ( data, name );
 
       }
 

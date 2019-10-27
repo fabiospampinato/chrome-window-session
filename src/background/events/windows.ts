@@ -18,8 +18,10 @@ const Windows = {
 
     if ( !name ) return;
 
-    await State.name2window ( name, window );
-    await State.window2name ( window, name );
+    const data = Window.dataify ( window );
+
+    await State.name2window ( name, data );
+    await State.window2name ( data, name );
 
   },
 
