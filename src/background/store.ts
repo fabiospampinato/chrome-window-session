@@ -11,7 +11,7 @@ const Store = {
 
     return new Promise<any> ( resolve => {
 
-      chrome.storage.sync.get ( keys, resolve );
+      chrome.storage.local.get ( keys, resolve );
 
     });
 
@@ -21,7 +21,7 @@ const Store = {
 
     return new Promise<any> ( resolve => {
 
-      chrome.storage.sync.set ( items, resolve );
+      chrome.storage.local.set ( items, resolve );
 
     });
 
