@@ -164,24 +164,16 @@ const Window = {
 
   },
 
-  async update ( windowId: number ) {
+  async update ( window: chrome.windows.Window ) {
 
-    const window = await Window.get ( windowId );
+    const name = await State.window2name ( window ) || await Window.guessName ( window );
 
-    if ( window ) {
+    if ( name ) {
 
-      const name = await State.window2name ( window ) || await Window.guessName ( window );
+      const data = Window.dataify ( window );
 
-      if ( name ) {
-
-        if ( !window.tabs || !window.tabs.length ) return Window.delete ( name );
-
-        const data = Window.dataify ( window );
-
-        await State.name2window ( name, data );
-        await State.window2name ( data, name );
-
-      }
+      await State.name2window ( name, data );
+      await State.window2name ( data, name );
 
     }
 

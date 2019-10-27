@@ -12,11 +12,13 @@ const Badge = {
 
   /* BADGE */
 
-  async update ( windowId?: number, tabId?: number ) {
+  async update ( windowId?: number | chrome.windows.Window, tabId?: number ) {
 
     if ( !Config.badge.enabled.saved ) return;
 
-    const window = windowId && await Window.get ( windowId );
+    if ( !windowId ) return;
+
+    const window = _.isNumber ( windowId ) ? await Window.get ( windowId ) : windowId;
 
     if ( !window ) return;
 

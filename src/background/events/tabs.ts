@@ -12,8 +12,12 @@ const Tabs = {
 
   async onChanged ( windowId: number ) {
 
-    await Badge.update ( windowId );
-    await Window.update ( windowId );
+    const window = await Window.get ( windowId );
+
+    if ( !window || !window.tabs || !window.tabs.length ) return; // Probably closing
+
+    await Badge.update ( window );
+    await Window.update ( window );
 
   },
 
