@@ -4,6 +4,7 @@
 import * as React from 'react';
 import ContentSaveIcon from 'react-material-icon-svg/dist/ContentSaveIcon';
 import DeleteIcon from 'react-material-icon-svg/dist/DeleteIcon';
+import DeleteForeverIcon from 'react-material-icon-svg/dist/DeleteForeverIcon';
 import RenameBoxIcon from 'react-material-icon-svg/dist/RenameBoxIcon';
 import UndoIcon from 'react-material-icon-svg/dist/UndoIcon';
 
@@ -11,7 +12,7 @@ import UndoIcon from 'react-material-icon-svg/dist/UndoIcon';
 
 class Session extends React.Component<any, any> {
 
-  input; Config; Window; _cleanup;
+  input; Config; Window;
 
   /* CONSTRUCTOR */
 
@@ -23,18 +24,10 @@ class Session extends React.Component<any, any> {
     this.Config = Config;
     this.Window = Window;
 
-    this._cleanup = this.cleanup.bind ( this );
-
     this.state = {
       deleting: false,
       editing: false
     };
-
-  }
-
-  componentDidMount () {
-
-    addEventListener ( 'unload', this._cleanup ); //FIXME: Doesn't work with multiple deletions at a time
 
   }
 
@@ -46,20 +39,14 @@ class Session extends React.Component<any, any> {
 
   }
 
-  componentWillUnmount () {
-
-    removeEventListener ( 'unload', this._cleanup );
-
-    this.cleanup ();
-
-  }
-
   /* API */
 
   cleanup () {
 
     if ( this.state.deleting ) {
+
       this.Window.delete ( this.props.name );
+
     }
 
   }
@@ -135,6 +122,36 @@ class Session extends React.Component<any, any> {
           activeCss = name && name === currentName ? 'active' : '',
           deletingCss = deleting ? 'delete' : '';
 
+    const saveBtn = (
+      <div className="button" title="Save" onClick={this.save.bind ( this )}>
+        <ContentSaveIcon />
+      </div>
+    );
+
+    const undoBtn = (
+      <div className="button" title="Undo" onClick={this.undo.bind ( this )}>
+        <UndoIcon />
+      </div>
+    );
+
+    const renameBtn = (
+      <div className="button" title="Rename" onClick={this.rename.bind ( this )}>
+        <RenameBoxIcon />
+      </div>
+    );
+
+    const deleteBtn = (
+      <div className="button" title="Delete" onClick={this.delete.bind ( this )}>
+        <DeleteIcon />
+      </div>
+    );
+
+    const cleanupBtn = (
+      <div className="button" title="Confirm deletion" onClick={this.cleanup.bind ( this )}>
+        <DeleteForeverIcon fill="red" />
+      </div>
+    );
+
     if ( !name || editing ) {
 
       return (
@@ -143,35 +160,18 @@ class Session extends React.Component<any, any> {
             <input type="text" placeholder="Window name..." defaultValue={name || this.Config.window.name} ref={i => this.input = i} />
           </form>
           <div className="spacer"></div>
-          <div className="button" onClick={this.save.bind ( this )}>
-            <ContentSaveIcon />
-          </div>
+          {saveBtn}
         </div>
       );
 
     } else {
-
-      const undoBtn = (
-        <div className="button" onClick={this.undo.bind ( this )}>
-          <UndoIcon />
-        </div>
-      );
-      const renameBtn = (
-        <div className="button" onClick={this.rename.bind ( this )}>
-          <RenameBoxIcon />
-        </div>
-      );
-      const deleteBtn = (
-        <div className="button" onClick={this.delete.bind ( this )}>
-          <DeleteIcon />
-        </div>
-      );
 
       return (
         <div className={`session ${activeCss} ${deletingCss}`}>
           <div className="name" onClick={this.open.bind ( this )}>{name} <span className="tabs-number">({window.tabs.length})</span></div>
           <div className="spacer"></div>
           {deleting && undoBtn}
+          {deleting && cleanupBtn}
           {!deleting && renameBtn}
           {!deleting && deleteBtn}
         </div>
