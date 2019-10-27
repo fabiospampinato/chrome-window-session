@@ -1,6 +1,7 @@
 
 /* IMPORT */
 
+import * as _ from 'lodash';
 import Config from './config';
 import State from './state';
 import Window from './window';
@@ -11,12 +12,17 @@ const Badge = {
 
   /* BADGE */
 
-  async update ( tabId?: number, windowId?: number ) {
+  async update ( windowId?: number, tabId?: number ) {
 
     if ( !Config.badge.enabled.saved ) return;
 
-    const window = windowId && await Window.get ( windowId ),
-          name = window ? await State.window2name ( window ) || await Window.guessName ( window ) : undefined,
+    const window = windowId && await Window.get ( windowId );
+
+    if ( !window ) return;
+
+    if ( _.isUndefined ( tabId ) ) return Badge.updateWindow ( window );
+
+    const name = window ? await State.window2name ( window ) || await Window.guessName ( window ) : undefined,
           tabsNr = window && window.tabs ? window.tabs.length : 0,
           text = tabsNr && ( Config.badge.enabled.unsaved || name ) ? String ( tabsNr ) : '';
 
@@ -29,7 +35,7 @@ const Badge = {
 
   updateTab ( tab: chrome.tabs.Tab ) {
 
-    Badge.update ( tab.id, tab.windowId );
+    Badge.update ( tab.windowId, tab.id );
 
   },
 
@@ -37,7 +43,10 @@ const Badge = {
 
   updateWindow ( window: chrome.windows.Window ) {
 
-    chrome.tabs.getSelected ( window.id, Badge.updateTab );
+    chrome.tabs.getSelected ( window.id, ( tab?: chrome.tabs.Tab ) => {
+      if ( !tab ) return;
+      Badge.updateTab ( tab );
+    });
 
   },
 

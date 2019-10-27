@@ -10,9 +10,9 @@ const Tabs = {
 
   /* HANDLERS */
 
-  async onChanged ( tabId: number, windowId: number ) {
+  async onChanged ( windowId: number ) {
 
-    await Badge.update ( tabId, windowId );
+    await Badge.update ( windowId );
     await Window.update ( windowId );
 
   },
@@ -21,43 +21,43 @@ const Tabs = {
 
     if ( !tab.id ) return;
 
-    return Tabs.onChanged ( tab.id, tab.windowId );
+    return Tabs.onChanged ( tab.windowId );
 
   },
 
   async onDetached ( tabId: number, info: chrome.tabs.TabDetachInfo ) { //TODO: If it was the last tab of a saved window, delete it
 
-    return Tabs.onChanged ( tabId, info.oldWindowId );
+    return Tabs.onChanged ( info.oldWindowId );
 
   },
 
   async onAttached ( tabId: number, info: chrome.tabs.TabAttachInfo ) {
 
-    return Tabs.onChanged ( tabId, info.newWindowId );
+    return Tabs.onChanged ( info.newWindowId );
 
   },
 
   async onRemoved ( tabId: number, info: chrome.tabs.TabRemoveInfo ) { //TODO: If it was the last tab of a saved window, delete it
 
-    return Tabs.onChanged ( tabId, info.windowId );
+    return Tabs.onChanged ( info.windowId );
 
   },
 
   async onMoved ( tabId: number, info: chrome.tabs.TabMoveInfo ) {
 
-    return Tabs.onChanged ( tabId, info.windowId );
+    return Tabs.onChanged ( info.windowId );
 
   },
 
   async onUpdated ( tabId: number, info: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab ) {
 
-    return Tabs.onChanged ( tabId, tab.windowId );
+    return Tabs.onChanged ( tab.windowId );
 
   },
 
   async onActivated ( info: chrome.tabs.TabActiveInfo ) {
 
-    return Tabs.onChanged ( info.tabId, info.windowId );
+    return Tabs.onChanged ( info.windowId );
 
   },
 
