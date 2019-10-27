@@ -39,6 +39,8 @@ const Tabs = {
 
   async onRemoved ( tabId: number, info: chrome.tabs.TabRemoveInfo ) { //TODO: If it was the last tab of a saved window, delete it
 
+    if ( info.isWindowClosing ) return;
+
     return Tabs.onChanged ( info.windowId );
 
   },
