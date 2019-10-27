@@ -174,6 +174,8 @@ const Window = {
 
       if ( name ) {
 
+        if ( !window.tabs || !window.tabs.length ) return Window.delete ( name );
+
         const data = Window.dataify ( window );
 
         await State.name2window ( name, data );
