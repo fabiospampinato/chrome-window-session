@@ -139,8 +139,8 @@ const Window = {
 
         if ( tab.id && tab.url && tab.url.startsWith ( 'chrome://newtab' ) ) {
 
-          savedWindow.tabs.forEach ( ({ url, pinned }) => {
-            chrome.tabs.create ({ url, pinned });
+          savedWindow.tabs.forEach ( ({ url, active, pinned, selected }) => {
+            chrome.tabs.create ({ url, active, pinned, selected });
           });
 
           return chrome.tabs.remove ( tab.id );
@@ -156,8 +156,7 @@ const Window = {
       chrome.windows.create ( {url}, window => {
         if ( !window || !window.tabs ) return;
         savedWindow.tabs.forEach ( ( tab, index ) => {
-          if ( !tab.pinned ) return;
-          chrome.tabs.update ( window.tabs[index].id, { pinned: true } );
+          chrome.tabs.update ( window.tabs[index].id, { active: tab.active, pinned: tab.pinned, selected: tab.selected } );
         });
       });
 
