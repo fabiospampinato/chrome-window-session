@@ -1,7 +1,7 @@
 {
   "name": "window-session",
   "description": "Save each window as a separate session, automatically.",
-  "version": "1.1.1",
+  "version": "1.1.0",
   "scripts": {
     "clean": "rimraf dist",
     "build": "npm run clean && webpack",
