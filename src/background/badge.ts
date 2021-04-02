@@ -45,9 +45,9 @@ const Badge = {
 
   updateWindow ( window: chrome.windows.Window ) {
 
-    chrome.tabs.getSelected ( window.id, ( tab?: chrome.tabs.Tab ) => {
-      if ( !tab ) return;
-      Badge.updateTab ( tab );
+    chrome.tabs.query ({ windowId: window.id, active: true }, ( tabs?: chrome.tabs.Tab[] ) => {
+      if ( !tabs ) return;
+      tabs.forEach ( ( tab: chrome.tabs.Tab ) => Badge.updateTab ( tab ) );
     });
 
   },
