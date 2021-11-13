@@ -5,6 +5,7 @@ import * as _ from 'lodash';
 import Badge from './badge';
 import Config from './config';
 import State from './state';
+import Utils from './utils';
 
 /* WINDOW */
 
@@ -83,6 +84,18 @@ const Window = {
   },
 
   /* API */
+
+  async copy ( name: string ) {
+
+    const savedWindow = await State.name2window ( name );
+
+    if ( !savedWindow ) return;
+
+    const urls = savedWindow.tabs.map ( tab => tab.url ).join ( '\n' );
+
+    Utils.copyToClipboard ( urls );
+
+  },
 
   async save ( window: chrome.windows.Window, name: string = Config.window.name, prevName?: string ) {
 
