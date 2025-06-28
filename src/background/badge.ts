@@ -1,62 +1,53 @@
 
 /* IMPORT */
 
-import * as _ from 'lodash';
 import Config from './config';
-import State from './state';
+import Registry from './registry';
+import {isNumber} from './utils';
 import Window from './window';
+import Windows from './windows';
 
-/* BADGE */
+/* MAIN */
 
 const Badge = {
 
-  /* BADGE */
+  updateWindow: async ( windowId?: chrome.windows.Window | number ): Promise<void> => {
 
-  async update ( windowId?: number | chrome.windows.Window, tabId?: number ) {
-
-    if ( !Config.badge.enabled.saved ) return;
-
-    if ( !windowId ) return;
-
-    const window = _.isNumber ( windowId ) ? await Window.get ( windowId ) : windowId;
+    const window = isNumber ( windowId ) ? await Window.get ( windowId ) : windowId || await Window.getCurrent ();
 
     if ( !window ) return;
 
-    if ( _.isUndefined ( tabId ) ) return Badge.updateWindow ( window );
+    const isSaved = Registry.hasWindowId ( window.id ?? 0 );
+    const config = isSaved ? Config.badge.saved : Config.badge.unsaved;
+    const {enabled, background, foreground} = config;
+    const tabsNr = window.tabs?.length ?? 0;
+    const text = `\u200A\u200A${tabsNr}`; // We need some hair spaces for better alignment
 
-    const name = window ? await State.window2name ( window ) || await Window.guessName ( window ) : undefined,
-          tabsNr = window && window.tabs ? window.tabs.length : 0,
-          text = tabsNr && ( Config.badge.enabled.unsaved || name ) ? String ( tabsNr ) : '';
+    window.tabs?.forEach ( tab => {
 
-    chrome.browserAction.setBadgeText ({ text, tabId });
-    chrome.browserAction.setBadgeBackgroundColor ({ color: Config.badge.color, tabId });
+      const tabId = tab.id;
 
-  },
+      if ( enabled && tabsNr ) {
 
-  /* TABS */
+        chrome.action.setBadgeText ({ text, tabId });
+        chrome.action.setBadgeBackgroundColor ({ color: background, tabId });
+        chrome.action.setBadgeTextColor ({ color: foreground });
 
-  updateTab ( tab: chrome.tabs.Tab ) {
+      } else {
 
-    Badge.update ( tab.windowId, tab.id );
+        chrome.action.setBadgeText ({ text: '', tabId });
 
-  },
+      }
 
-  /* WINDOWS */
-
-  updateWindow ( window: chrome.windows.Window ) {
-
-    chrome.tabs.query ({ windowId: window.id, active: true }, ( tabs?: chrome.tabs.Tab[] ) => {
-      if ( !tabs ) return;
-      tabs.forEach ( ( tab: chrome.tabs.Tab ) => Badge.updateTab ( tab ) );
     });
 
   },
 
-  updateWindows () {
+  updateWindows: async (): Promise<void> => {
 
-    chrome.windows.getAll ( { populate: true }, windows => {
-      windows.forEach ( Badge.updateWindow );
-    });
+    const windows = await Windows.get ();
+
+    windows.forEach ( Badge.updateWindow );
 
   }
 

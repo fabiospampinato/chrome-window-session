@@ -1,0 +1,7 @@
+
+.sessions {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 6px;
+}

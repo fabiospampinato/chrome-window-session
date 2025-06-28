@@ -1,0 +1,34 @@
+
+button {
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background-color: #00000000;
+  appearance: none;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+
+  > svg {
+    opacity: .8;
+    width: 20px;
+    height: 20px;
+    &:not([fill]) {
+      fill: #1f1f1f;
+    }
+  }
+
+  &:hover {
+    background-color: #00000018;
+  }
+
+  &:active {
+    background-color: #00000026;
+  }
+
+}

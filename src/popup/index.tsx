@@ -1,14 +1,9 @@
 
 /* IMPORT */
 
-import * as React from 'react';
-import {render} from 'react-dom';
-import Popup from './components/popup';
-import './index.scss';
+import {render} from 'voby';
+import App from './app';
 
-/* RENDER */
+/* INIT */
 
-render (
-  <Popup />,
-  document.getElementById ( 'react-root' )
-);
+render ( <App />, document.getElementById ( 'app' ) );

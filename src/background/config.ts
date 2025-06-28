@@ -1,17 +1,18 @@
 
-/* CONFIG */
+/* MAIN */
 
 const Config = {
   badge: {
-    color: '#DB5149',
-    enabled: {
-      saved: true,
-      unsaved: false
+    saved: {
+      enabled: true,
+      background:'#DB5149',
+      foreground: '#FFFFFF'
+    },
+    unsaved: {
+      enabled: false,
+      background:'#919191',
+      foreground: '#FFFFFF'
     }
-  },
-  window: {
-    name: 'Window',
-    recycle: true
   }
 };
 

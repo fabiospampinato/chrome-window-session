@@ -1,38 +1,49 @@
 
-/* IMPORT */
+/* MAIN */
 
-import * as _ from 'lodash';
+const getSessionUrls = ( session: Session | SessionTemporary ): string[] => {
 
-/* UTILS */
+  return session.tabs.map ( tab => tab.url );
 
-const Utils = {
+};
 
-  copyToClipboard ( str: string ) {
+const getWindowTabs = ( window: chrome.windows.Window ): Tab[] => {
 
-    const textarea = document.createElement ( 'textarea' );
-    document.body.appendChild ( textarea );
-    textarea.value = str;
-    textarea.focus ();
-    textarea.select ();
-    document.execCommand ( 'Copy' );
-    textarea.remove ();
+  return window.tabs?.map ( tab => {
 
-  },
+    const {active, pinned, selected} = tab;
+    const url = tab.url ?? '';
 
-  tab2id ( tab?: number | chrome.tabs.Tab ) {
+    return {active, pinned, selected, url};
 
-    return ( _.isObject ( tab ) && !_.isNumber ( tab ) && !_.isUndefined ( tab ) ? tab.id : tab ) as number; //TSC;
+  }) || [];
 
-  },
+};
 
-  window2id ( window?: number | chrome.windows.Window ) {
+const getWindowUrls = ( window: chrome.windows.Window ): string[] => {
 
-    return ( _.isObject ( window ) && !_.isNumber ( window ) && !_.isUndefined ( window ) ? window.id : window ) as number; //TSC
+  return window.tabs?.map ( tab => tab.url ).filter ( isString ) ?? [];
 
-  }
+};
+
+const isNumber = ( value: unknown ): value is number => {
+
+  return typeof value === 'number';
+
+};
+
+const isString = ( value: unknown ): value is string => {
+
+  return typeof value === 'string';
+
+};
+
+const isUndefined = ( value: unknown ): value is undefined => {
+
+  return value === undefined;
 
 };
 
 /* EXPORT */
 
-export default Utils;
+export {getSessionUrls, getWindowTabs, getWindowUrls, isNumber, isString, isUndefined};
