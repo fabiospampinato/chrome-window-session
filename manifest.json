@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Window Session",
   "description": "Save each window as a separate session, automatically.",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "action": {
     "default_title": "Window Session",
     "default_icon": "./resources/icon/icon-256.png",

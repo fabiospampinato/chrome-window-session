@@ -4,7 +4,7 @@
   "repository": "github:fabiospampinato/chrome-window-session",
   "description": "Save each window as a separate session, automatically.",
   "license": "MIT",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
     "clean": "tsex clean",
