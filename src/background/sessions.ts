@@ -6,7 +6,7 @@ import Registry from './registry';
 import Storage from './storage';
 import Window from './window';
 import Windows from './windows';
-import {getSessionUrls, getWindowTabs, getWindowUrls} from './utils';
+import {getSessionUrls, getWindowTabs, getWindowsTabGroups, getWindowUrls} from './utils';
 
 /* MAIN */
 
@@ -25,7 +25,8 @@ const Sessions = {
     if ( sessionSaved ) return sessionSaved;
 
     const tabs = getWindowTabs ( window );
-    const sessionTemporary = { tabs, windowId };
+    const tabGroups = await getWindowsTabGroups ( window );
+    const sessionTemporary = { tabs, tabGroups, windowId };
 
     return sessionTemporary;
 
@@ -112,7 +113,7 @@ const Sessions = {
 
   set: async ( sessions: Session[] ): Promise<void> => {
 
-    const stored = sessions.map ( ({ id, name, tabs }) => ({ id, name, tabs }) );
+    const stored = sessions.map ( ({ id, name, tabs, tabGroups }) => ({ id, name, tabs, tabGroups }) );
 
     await Storage.setSessions ( stored );
 

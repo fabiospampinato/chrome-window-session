@@ -12,7 +12,6 @@ const useState = (): $<State> => {
   const state = $<State>({
     sessions: [],
     session: undefined
-
   }, {
     equals: isEqual
   });

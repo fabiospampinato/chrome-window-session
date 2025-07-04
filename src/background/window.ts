@@ -4,7 +4,7 @@
 import Badge from './badge';
 import Session from './session';
 import Sessions from './sessions';
-import {getWindowTabs} from './utils';
+import {getWindowTabs, getWindowsTabGroups} from './utils';
 
 /* MAIN */
 
@@ -45,11 +45,12 @@ const Window = {
 
   },
 
-  updateTabs: ( window: chrome.windows.Window, session: Session ): Promise<void> => {
+  updateTabs: async ( window: chrome.windows.Window, session: Session ): Promise<void> => {
 
     const tabs = getWindowTabs ( window );
+    const tabGroups = await getWindowsTabGroups ( window );
 
-    return Session.update ( session.id, { tabs } );
+    return Session.update ( session.id, { tabs, tabGroups } );
 
   }
 

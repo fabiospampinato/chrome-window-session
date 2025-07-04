@@ -54,8 +54,9 @@ const Session = ( { active, selected, session }: Props ): JSX.Element => {
       } else { // Insert
         const id = zeptoid ();
         const tabs = session.tabs;
+        const tabGroups = session.tabGroups;
         const windowId = $$(active)?.windowId;
-        RPC.insertSession ({ id, name, tabs, windowId });
+        RPC.insertSession ({ id, name, tabs, tabGroups, windowId });
       }
     });
   };

@@ -4,8 +4,7 @@
 import Badge from './badge';
 import Registry from './registry';
 import Sessions from './sessions';
-import Window from './window';
-import {getSessionUrls} from './utils';
+import {castTabGroupColor, getSessionUrls, isNumber} from './utils';
 
 /* MAIN */
 
@@ -38,7 +37,7 @@ const Session = {
     const sessions = await Sessions.getSaved ();
     const sessionsNext = [...sessions, session];
 
-    Registry.link ( session.windowId, session.id );
+    Registry.link ( session.windowId ?? 0, session.id );
 
     await Badge.updateWindow ( session.windowId ?? 0 );
     await Sessions.set ( sessionsNext );
@@ -53,50 +52,50 @@ const Session = {
 
       return;
 
-    } else if ( session.windowId ) { // Existing window
+    } else if ( session.windowId ) { // Focus to existing window
 
       await chrome.windows.update ( session.windowId, { focused: true } );
 
-    } else { // Recycle window | New window
+    } else { // Open new window
 
-      const window = await Window.getCurrent ();
+      const url = getSessionUrls ( session );
+      const window = await chrome.windows.create ({ url, focused: true, type: 'normal' });
       const windowId = window.id ?? 0;
-      const tabs = window.tabs || [];
-      const tab = tabs[0];
 
-      if ( !Registry.hasWindowId ( windowId ) && tabs.length === 1 && tab?.url?.startsWith ( 'chrome://newtab' ) ) { // Recycle window
+      Registry.link ( windowId, session.id );
 
-        Registry.link ( windowId, session.id );
+      session.tabs.forEach ( ( tab, index ) => {
 
-        session.tabs.forEach ( tab => {
+        const tabId = window.tabs?.[index]?.id;
 
-          chrome.tabs.create ( tab );
+        if ( !tabId ) return;
 
-        });
+        const {active, pinned, selected} = tab;
 
-        chrome.tabs.remove ( tab?.id ?? 0 );
+        chrome.tabs.update ( tabId, { active, pinned, selected } );
 
-      } else { // New window
+      });
 
-        const url = getSessionUrls ( session );
-        const window = await chrome.windows.create ({ url, focused: true, type: 'normal' });
-        const windowId = window.id ?? 0;
+      session.tabGroups.forEach ( group => {
 
-        Registry.link ( windowId, session.id );
-
-        session.tabs.forEach ( ( tab, index ) => {
-
+        const tabIds = session.tabs.map ( ( tab, index ) => {
+          if ( tab.groupId !== group.id ) return;
           const tabId = window.tabs?.[index]?.id;
-
           if ( !tabId ) return;
+          return tabId;
+        }).filter ( isNumber );
 
-          const {active, pinned, selected} = tab;
+        chrome.tabs.group ( { tabIds }, groupId => {
 
-          chrome.tabs.update ( tabId, { active, pinned, selected } );
+          chrome.tabGroups.update ( groupId, {
+            color: castTabGroupColor ( group.color ),
+            title: group.title,
+            collapsed: group.collapsed,
+          });
 
         });
 
-      }
+      });
 
     }
 
