@@ -130,6 +130,7 @@ Session.Viewing = ( { selected, session, onCopy, onDelete, onOpen, onRename }: V
   const deleting = $(false);
   const name = () => $$(session).name ?? '';
   const tabsNr = () => $$(session).tabs.length;
+  const tabsLabel = () => $$(session).windowId ? `(${tabsNr ()})` : tabsNr ();
 
   const onDeleting = (): void => {
     deleting ( true );
@@ -144,7 +145,7 @@ Session.Viewing = ( { selected, session, onCopy, onDelete, onOpen, onRename }: V
       <div class="session-name" onClick={onOpen}>
         {name}
         <div class="session-count">
-          {tabsNr}
+          {tabsLabel}
         </div>
       </div>
       <Ternary when={deleting}>
