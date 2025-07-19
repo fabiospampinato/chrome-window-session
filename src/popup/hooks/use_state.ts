@@ -1,5 +1,5 @@
 
-/* IMPORt */
+/* IMPORT */
 
 import {$, useEffect} from 'voby';
 import RPC from '../rpc';

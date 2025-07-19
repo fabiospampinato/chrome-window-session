@@ -1,5 +1,5 @@
 
-/* IMPORt */
+/* IMPORT */
 
 import type Procedures from '../background/rpc.procedures';
 import frontend from 'chrome-rpc/frontend';
