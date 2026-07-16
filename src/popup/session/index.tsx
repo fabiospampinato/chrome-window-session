@@ -14,7 +14,7 @@ import type {Props, EditingProps, ViewingProps} from './types';
 
 const Session = ( { active, selected, session }: Props ): JSX.Element => {
 
-  //TODO: Reaplace these with a single "writable memo", once Voby supports it built-in
+  //TODO: Replace these with a single "writable memo", once Voby supports it built-in
   const editingImplicitly = () => isSessionTemporary ( $$(session) );
   const editingExplicitly = $(false);
   const editing = () => editingImplicitly () || editingExplicitly ();
